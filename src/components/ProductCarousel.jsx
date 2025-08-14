@@ -15,18 +15,27 @@ export default function ProductCarousel({ products = [] }) {
   const pause = () => swiperRef.current?.autoplay?.stop();
   const resume = () => swiperRef.current?.autoplay?.start();
 
-  // Fallback swipe handlers (works for mouse + touch)
+  // Fallback swipe handlers
   const handlers = useSwipeable({
-    onSwipedLeft: () => swiperRef.current?.slideNext?.(),
-    onSwipedRight: () => swiperRef.current?.slidePrev?.(),
-    trackMouse: true,                    // enables mouse-drag on desktop
-    preventDefaultTouchmoveEvent: true,  // keeps gesture clean
+    onSwipedLeft: () => {
+      swiperRef.current?.slideNext?.();
+      resume(); // restart autoplay after swipe
+    },
+    onSwipedRight: () => {
+      swiperRef.current?.slidePrev?.();
+      resume();
+    },
+    trackMouse: true,
+    preventScrollOnSwipe: true,
   });
 
   return (
     <div
       className="w-full select-none"
-      style={{ touchAction: "pan-x", WebkitOverflowScrolling: "touch" }}
+      style={{
+        touchAction: "pan-y", // let Swiper handle horizontal pan
+        WebkitOverflowScrolling: "touch",
+      }}
       {...handlers}
     >
       <Swiper
@@ -36,14 +45,14 @@ export default function ProductCarousel({ products = [] }) {
         spaceBetween={16}
         loop={true}
         speed={600}
-        allowTouchMove={true}
+        allowTouchMove={true} // native Swiper touch
         simulateTouch={true}
         grabCursor={true}
-        threshold={5}  // small drag needed to trigger swipe
+        threshold={5}
         autoplay={{
           delay: 3000,
           disableOnInteraction: false, // resume autoplay after swipe
-          pauseOnMouseEnter: true,     // hover pause on desktop
+          pauseOnMouseEnter: true,
         }}
         navigation
         pagination={{ clickable: true }}
@@ -69,4 +78,3 @@ export default function ProductCarousel({ products = [] }) {
     </div>
   );
 }
-
