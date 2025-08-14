@@ -11,3 +11,6 @@ body {
   overflow: hidden;
   touch-action: pan-x; /* enables touch swiping */
 }
+body {
+  @apply italic;
+}
