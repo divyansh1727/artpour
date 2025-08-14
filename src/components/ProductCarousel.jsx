@@ -1,80 +1,60 @@
-// src/components/ProductCarousel.jsx
-import React, { useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation, Pagination, A11y } from "swiper/modules";
-import { useSwipeable } from "react-swipeable";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-import ProductCard from "./ProductCard";
+const ProductCard = ({ products }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-export default function ProductCarousel({ products = [] }) {
-  const swiperRef = useRef(null);
+  const prevSlide = () => {
+    setCurrentIndex((prev) =>
+      prev === 0 ? products.length - 1 : prev - 1
+    );
+  };
 
-  const pause = () => swiperRef.current?.autoplay?.stop();
-  const resume = () => swiperRef.current?.autoplay?.start();
-
-  // Fallback swipe handlers
-  const handlers = useSwipeable({
-    onSwipedLeft: () => {
-      swiperRef.current?.slideNext?.();
-      resume(); // restart autoplay after swipe
-    },
-    onSwipedRight: () => {
-      swiperRef.current?.slidePrev?.();
-      resume();
-    },
-    trackMouse: true,
-    preventScrollOnSwipe: true,
-  });
+  const nextSlide = () => {
+    setCurrentIndex((prev) =>
+      prev === products.length - 1 ? 0 : prev + 1
+    );
+  };
 
   return (
-    <div
-      className="w-full select-none"
-      style={{
-        touchAction: "pan-y", // let Swiper handle horizontal pan
-        WebkitOverflowScrolling: "touch",
-      }}
-      {...handlers}
-    >
-      <Swiper
-        modules={[Autoplay, Navigation, Pagination, A11y]}
-        onBeforeInit={(swiper) => (swiperRef.current = swiper)}
-        slidesPerView={1}
-        spaceBetween={16}
-        loop={true}
-        speed={600}
-        allowTouchMove={true} // native Swiper touch
-        simulateTouch={true}
-        grabCursor={true}
-        threshold={5}
-        autoplay={{
-          delay: 3000,
-          disableOnInteraction: false, // resume autoplay after swipe
-          pauseOnMouseEnter: true,
-        }}
-        navigation
-        pagination={{ clickable: true }}
-        breakpoints={{
-          640: { slidesPerView: 1 },
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
-        }}
-        className="pb-8"
+    <div className="relative w-full max-w-5xl mx-auto">
+      {/* Product display */}
+      <motion.div
+        key={products[currentIndex].id}
+        className="p-4 bg-gray-900 rounded-lg shadow-lg text-center"
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4 }}
       >
-        {products.map((p, idx) => (
-          <SwiperSlide key={p.id || idx} className="!h-auto flex">
-            <div className="w-full">
-              <ProductCard
-                product={p}
-                onPauseAutoplay={pause}
-                onResumeAutoplay={resume}
-              />
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+        <img
+          src={products[currentIndex].image}
+          alt={products[currentIndex].name}
+          className="w-full h-64 object-cover rounded-lg mb-4"
+        />
+        <h3 className="text-xl font-semibold text-white">
+          {products[currentIndex].name}
+        </h3>
+        <p className="text-gray-400">${products[currentIndex].price}</p>
+      </motion.div>
+
+      {/* Prev button */}
+      <button
+        onClick={prevSlide}
+        className="absolute top-1/2 -left-6 transform -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black transition"
+      >
+        <FaChevronLeft size={20} />
+      </button>
+
+      {/* Next button */}
+      <button
+        onClick={nextSlide}
+        className="absolute top-1/2 -right-6 transform -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black transition"
+      >
+        <FaChevronRight size={20} />
+      </button>
     </div>
   );
-}
+};
+
+export default ProductCard;

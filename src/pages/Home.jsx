@@ -47,12 +47,12 @@ export default function Home() {
       <Hero />
 
       {/* Featured Products Carousel */}
-      <section className="py-16 px-4 bg-pink-50 overflow-hidden relative">
+      <section className="relative w-full py-12" id="featured-products">
         <h2 className="text-3xl font-bold text-center text-pink-600 mb-12">
           Featured Products
         </h2>
 
-        {/* Arrow Buttons */}
+        {/* Arrow Buttons (scoped to this section only) */}
         <button
           onClick={scrollLeft}
           className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
@@ -93,4 +93,5 @@ export default function Home() {
     </div>
   );
 }
+
 
