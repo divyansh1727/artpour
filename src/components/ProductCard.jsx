@@ -1,8 +1,5 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import emailjs from "emailjs-com";
-import { db } from "../firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { createPortal } from "react-dom";
 
 export default function ProductCard({ product, onPause, onResume }) {
@@ -20,38 +17,35 @@ export default function ProductCard({ product, onPause, onResume }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleBuy = async () => {
-    setLoading(true);
-    try {
-      await addDoc(collection(db, "orders"), {
-        productName: product.name,
-        productPrice: product.price,
-        ...formData,
-        createdAt: serverTimestamp(),
-      });
+  const handleBuy = () => {
+  setLoading(true);
+  try {
+    const phoneNumber = "917838548016"; // Owner's phone number
+    const text = `*New Purchase Request*\n\n_Product_: ${product.name}\n_Price_: $${product.price}\n\n*Customer Info:*\nName: ${formData.name}\nEmail: ${formData.email}\nAddress: ${formData.address}`;
+    const encodedText = encodeURIComponent(text);
 
-      await emailjs.send(
-        "YOUR_SERVICE_ID",
-        "YOUR_TEMPLATE_ID",
-        {
-          productName: product.name,
-          productPrice: product.price,
-          name: formData.name,
-          email: formData.email,
-          address: formData.address,
-        },
-        "YOUR_PUBLIC_KEY"
-      );
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-      alert("Purchase successful! PourByKay will contact you soon.");
-      setFormData({ name: "", email: "", address: "" });
-      setShowModal(false);
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong. Please try again.");
+    if (isMobile) {
+      // Open WhatsApp App
+      window.location.href = `whatsapp://send?phone=${phoneNumber}&text=${encodedText}`;
+    } else {
+      // Open WhatsApp Web
+      window.open(`https://wa.me/${phoneNumber}?text=${encodedText}`, "_blank");
     }
-    setLoading(false);
-  };
+
+    // Success popup
+    alert("✅ Order details sent to WhatsApp. Our team will contact you soon!");
+
+    // Reset form & close modal
+    setFormData({ name: "", email: "", address: "" });
+    setShowModal(false);
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong. Please try again.");
+  }
+  setLoading(false);
+};
 
   return (
     <>
@@ -69,7 +63,7 @@ export default function ProductCard({ product, onPause, onResume }) {
           className="w-full h-56 object-cover"
           draggable={false}
         />
-        <div className="p-4">
+        <div className="p-4 italic">
           <h2 className="text-pink-600 font-bold text-lg">{product.name}</h2>
           <p className="text-gray-700 font-semibold">${product.price}</p>
           <button
@@ -93,7 +87,7 @@ export default function ProductCard({ product, onPause, onResume }) {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="bg-white rounded-xl p-6 w-96 max-w-full"
+              className="bg-white rounded-xl p-6 w-96 max-w-full italic"
               onClick={(e) => e.stopPropagation()}
             >
               <h3 className="text-xl font-bold text-pink-600 mb-4">
@@ -105,7 +99,7 @@ export default function ProductCard({ product, onPause, onResume }) {
                 placeholder="Your Name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full mb-2 p-2 border rounded"
+                className="w-full mb-2 p-2 border rounded italic"
               />
               <input
                 type="email"
@@ -113,28 +107,28 @@ export default function ProductCard({ product, onPause, onResume }) {
                 placeholder="Your Email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full mb-2 p-2 border rounded"
+                className="w-full mb-2 p-2 border rounded italic"
               />
               <textarea
                 name="address"
                 placeholder="Your Address"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full mb-2 p-2 border rounded"
+                className="w-full mb-2 p-2 border rounded italic"
               />
               <div className="flex justify-end gap-2 mt-2">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-full bg-gray-300 hover:bg-gray-400 transition"
+                  className="px-4 py-2 rounded-full bg-gray-300 hover:bg-gray-400 transition italic"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleBuy}
-                  className="px-4 py-2 rounded-full bg-pink-600 text-white hover:bg-pink-500 transition"
+                  className="px-4 py-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition italic"
                   disabled={loading}
                 >
-                  {loading ? "Processing..." : "Confirm"}
+                  {loading ? "Processing..." : "Send via WhatsApp"}
                 </button>
               </div>
             </motion.div>
