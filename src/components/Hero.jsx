@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 
 export default function Hero() {
@@ -20,13 +19,7 @@ export default function Hero() {
       >
         Unique, handcrafted art pieces made with love. Discover and bring home creativity!
       </motion.p>
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        className="bg-pink-600 text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-pink-500 transition"
-      >
-        Shop Now
-      </motion.button>
+       
     </section>
   );
 }

@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
-import vaseImg from "../assets/images/vase.jpg";
-import candleImg from "../assets/images/candle.jpg";
-import canvasImg from "../assets/images/canvas.jpg";
-import sculptureImg from "../assets/images/sculpture.jpg";
+import P1 from "../assets/images/p1.jpg";
+import P2 from "../assets/images/p2.jpg";
+import P3 from "../assets/images/p3.jpg";
+import P4 from "../assets/images/p4.jpg";
+import P5 from "../assets/images/p5.jpg";
+
 
 export default function AboutWork() {
-  const images = [vaseImg, candleImg, canvasImg, sculptureImg];
+  const images = [P1,P2,P3,P4,P5];
   const [isPaused, setIsPaused] = useState(false);
   const controls = useAnimation();
 

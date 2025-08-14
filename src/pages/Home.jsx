@@ -1,16 +1,24 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import Hero from "../components/Hero";
 import ProductCard from "../components/ProductCard";
 import AboutWork from "../components/AboutWork";
 import AboutOwner from "../components/AboutOwner";
 import Footer from "../components/Footer";
+import p1 from "../assets/products/p1.jpg";
+import p2 from "../assets/products/p2.jpg";
+import p3 from "../assets/products/p3.jpg";
+import p4 from "../assets/products/p4.jpg";
+
+
+ 
+
 
 const products = [
-  { id: 1, name: "Handmade Vase", price: 25, image: "/products/vase.jpg" },
-  { id: 2, name: "Decorative Candle", price: 15, image: "/products/candle.jpg" },
-  { id: 3, name: "Art Canvas", price: 40, image: "/products/canvas.jpg" },
-  { id: 4, name: "Mini Sculpture", price: 30, image: "/products/sculpture.jpg" },
+  { id: 1, name: "Rakhi", price: 25, image: p1 },
+  { id: 2, name: "Decorative Candle", price: 15, image: p2 },
+  { id: 3, name: "Art Canvas", price: 40, image: p3 },
+  { id: 4, name: "Mini Sculpture", price: 30, image:p4 },
 ];
 
 export default function Home() {
