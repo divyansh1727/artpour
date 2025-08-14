@@ -2,6 +2,7 @@
 import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination, A11y } from "swiper/modules";
+import { useSwipeable } from "react-swipeable";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -14,8 +15,20 @@ export default function ProductCarousel({ products = [] }) {
   const pause = () => swiperRef.current?.autoplay?.stop();
   const resume = () => swiperRef.current?.autoplay?.start();
 
+  // Fallback swipe handlers (works for mouse + touch)
+  const handlers = useSwipeable({
+    onSwipedLeft: () => swiperRef.current?.slideNext?.(),
+    onSwipedRight: () => swiperRef.current?.slidePrev?.(),
+    trackMouse: true,                    // enables mouse-drag on desktop
+    preventDefaultTouchmoveEvent: true,  // keeps gesture clean
+  });
+
   return (
-    <div className="w-full">
+    <div
+      className="w-full select-none"
+      style={{ touchAction: "pan-x", WebkitOverflowScrolling: "touch" }}
+      {...handlers}
+    >
       <Swiper
         modules={[Autoplay, Navigation, Pagination, A11y]}
         onBeforeInit={(swiper) => (swiperRef.current = swiper)}
@@ -23,14 +36,17 @@ export default function ProductCarousel({ products = [] }) {
         spaceBetween={16}
         loop={true}
         speed={600}
+        allowTouchMove={true}
+        simulateTouch={true}
+        grabCursor={true}
+        threshold={5}  // small drag needed to trigger swipe
         autoplay={{
           delay: 3000,
-          disableOnInteraction: false, // allows swipe + autoplay resume
-          pauseOnMouseEnter: true,
+          disableOnInteraction: false, // resume autoplay after swipe
+          pauseOnMouseEnter: true,     // hover pause on desktop
         }}
         navigation
         pagination={{ clickable: true }}
-        grabCursor={true} // makes swipe feel natural
         breakpoints={{
           640: { slidesPerView: 1 },
           768: { slidesPerView: 2 },
