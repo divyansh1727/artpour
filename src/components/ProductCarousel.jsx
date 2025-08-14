@@ -25,7 +25,7 @@ export default function ProductCarousel({ products = [] }) {
         speed={600}
         autoplay={{
           delay: 3000,
-          disableOnInteraction: true,   // stop when user swipes/clicks
+          disableOnInteraction: false,   // stop when user swipes/clicks
           pauseOnMouseEnter: true,      // pause on hover
         }}
         navigation

@@ -52,10 +52,7 @@ export default function ProductCard({ product, onPause, onResume }) {
       <motion.div
         whileHover={{ scale: 1.05 }}
         className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
-        onMouseEnter={onPause}
-        onMouseLeave={onResume}
-        onTouchStart={onPause}
-        onTouchEnd={onResume}
+        
       >
         <img
           src={product.image}
