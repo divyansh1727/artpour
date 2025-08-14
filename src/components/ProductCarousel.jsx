@@ -25,11 +25,12 @@ export default function ProductCarousel({ products = [] }) {
         speed={600}
         autoplay={{
           delay: 3000,
-          disableOnInteraction: false,   // stop when user swipes/clicks
-          pauseOnMouseEnter: true,      // pause on hover
+          disableOnInteraction: false, // allows swipe + autoplay resume
+          pauseOnMouseEnter: true,
         }}
         navigation
         pagination={{ clickable: true }}
+        grabCursor={true} // makes swipe feel natural
         breakpoints={{
           640: { slidesPerView: 1 },
           768: { slidesPerView: 2 },
@@ -52,3 +53,4 @@ export default function ProductCarousel({ products = [] }) {
     </div>
   );
 }
+
