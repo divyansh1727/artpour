@@ -1,0 +1,18 @@
+.stars {
+  background: 
+    linear-gradient(135deg, #8b5e3c, #d9a68b) url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+  background-size: cover;
+}
+
+.twinkling {
+  background: 
+    transparent url('https://www.transparenttextures.com/patterns/tiny-cross-hatch.png') repeat;
+  background-size: cover;
+  animation: twinkle 2s infinite;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.9; }
+  50% { opacity: 0.5; }
+  100% { opacity: 0.9; }
+}
