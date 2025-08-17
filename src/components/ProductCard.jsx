@@ -59,7 +59,7 @@ export default function ProductCard({ product, onPauseAutoplay, onResumeAutoplay
     muted
     loop
     playsInline
-    preload="metadata"
+    preload="auto"
     className="w-full h-56 object-cover"
     onMouseEnter={(e) => {
       if (e.currentTarget && typeof e.currentTarget.play === "function") {
