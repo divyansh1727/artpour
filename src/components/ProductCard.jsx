@@ -55,24 +55,31 @@ export default function ProductCard({ product, onPauseAutoplay, onResumeAutoplay
       >
         {product.image.endsWith(".mp4") ? (
   <video
-    src={product.image}
-    muted
-    loop
-    playsInline
-    preload="auto"
-    className="w-full h-56 object-cover"
-    onMouseEnter={(e) => {
+  src={product.image}
+  muted
+  loop
+  playsInline
+  preload="auto"
+  className="w-full h-56 object-cover"
+  autoPlay={/Mobi|Android/i.test(navigator.userAgent)} // autoplay on mobile
+  onMouseEnter={(e) => {
+    if (!/Mobi|Android/i.test(navigator.userAgent)) { // desktop only
       if (e.currentTarget && typeof e.currentTarget.play === "function") {
-        e.currentTarget.play().catch(() => {}); // ignore play errors
+        e.currentTarget.play().catch(() => {});
       }
-    }}
-    onMouseLeave={(e) => {
+    }
+  }}
+  onMouseLeave={(e) => {
+    if (!/Mobi|Android/i.test(navigator.userAgent)) { // desktop only
       if (e.currentTarget && typeof e.currentTarget.pause === "function") {
         e.currentTarget.pause();
       }
-    }}
+    }
+  }}
   />
-) : (
+):( 
+
+
         <img
           src={product.image}
           alt={product.name}
