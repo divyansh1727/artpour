@@ -10,12 +10,15 @@ import p1 from "../assets/products/p1.jpg";
 import p2 from "../assets/products/p2.jpg";
 import p3 from "../assets/products/p3.jpg";
 import p4 from "../assets/products/p4.jpg";
+import V1 from "../assets/products/v1.mp4"
 
 const products = [
   { id: 1, name: "Rakhi", price: 25, image: p1 },
   { id: 2, name: "Decorative Candle", price: 15, image: p2 },
   { id: 3, name: "Art Canvas", price: 40, image: p3 },
   { id: 4, name: "Mini Sculpture", price: 30, image: p4 },
+  { id: 5, name: "Art", price: 50, image: V1 },
+
 ];
 
 export default function Home() {

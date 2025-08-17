@@ -53,12 +53,35 @@ export default function ProductCard({ product, onPauseAutoplay, onResumeAutoplay
         whileHover={{ scale: 1.05 }}
         className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
       >
+        {product.image.endsWith(".mp4") ? (
+  <video
+    src={product.image}
+    muted
+    loop
+    playsInline
+    preload="metadata"
+    className="w-full h-56 object-cover"
+    onMouseEnter={(e) => {
+      if (e.currentTarget && typeof e.currentTarget.play === "function") {
+        e.currentTarget.play().catch(() => {}); // ignore play errors
+      }
+    }}
+    onMouseLeave={(e) => {
+      if (e.currentTarget && typeof e.currentTarget.pause === "function") {
+        e.currentTarget.pause();
+      }
+    }}
+  />
+) : (
         <img
           src={product.image}
           alt={product.name}
           className="w-full h-56 object-cover"
-          draggable={false} // prevents ghost image on drag
+          onMouseEnter={(e) => e.currentTarget.play()}
+          onMouseLeave={(e) => e.currentTarget.pause()}
+           // prevents ghost image on drag
         />
+  )}
         <div className="p-4 italic">
           <h2 className="text-pink-600 font-bold text-lg">{product.name}</h2>
           <p className="text-gray-700 font-semibold">${product.price}</p>
