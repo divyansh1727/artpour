@@ -2,42 +2,34 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { createPortal } from "react-dom";
 
-export default function ProductCard({ product, onPauseAutoplay, onResumeAutoplay }) {
+export default function ProductCard({ product }) {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", address: "" });
   const [loading, setLoading] = useState(false);
 
-  // Pause autoplay while modal is open
-  useEffect(() => {
-    if (showModal) onPauseAutoplay?.();
-    else onResumeAutoplay?.();
-  }, [showModal, onPauseAutoplay, onResumeAutoplay]);
+  // Optional swipe tracking state
+  const [dragDirection, setDragDirection] = useState(null);
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    // pause autoplay if you have any
+  }, [showModal]);
+
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleBuy = () => {
     setLoading(true);
     try {
-      const phoneNumber = "917838548016"; // Owner's phone number
+      const phoneNumber = "917838548016";
       const text = `*New Purchase Request*\n\n_Product_: ${product.name}\n_Price_: $${product.price}\n\n*Customer Info:*\nName: ${formData.name}\nEmail: ${formData.email}\nAddress: ${formData.address}`;
       const encodedText = encodeURIComponent(text);
-
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-      if (isMobile) {
-        // Open WhatsApp App
+      if (isMobile)
         window.location.href = `whatsapp://send?phone=${phoneNumber}&text=${encodedText}`;
-      } else {
-        // Open WhatsApp Web
-        window.open(`https://wa.me/${phoneNumber}?text=${encodedText}`, "_blank");
-      }
+      else window.open(`https://wa.me/${phoneNumber}?text=${encodedText}`, "_blank");
 
-      // Success popup
       alert("✅ Order details sent to WhatsApp. Our team will contact you soon!");
-
-      // Reset form & close modal
       setFormData({ name: "", email: "", address: "" });
       setShowModal(false);
     } catch (err) {
@@ -47,54 +39,58 @@ export default function ProductCard({ product, onPauseAutoplay, onResumeAutoplay
     setLoading(false);
   };
 
+  if (!product)
+    return <p className="text-center text-white">Product not available</p>;
+
   return (
-    <>
+    <div className="relative w-full max-w-5xl mx-auto">
+      {/* Swipeable product card */}
       <motion.div
+        key={product.id}
+        className="bg-white rounded-xl shadow-lg overflow-hidden cursor-grab"
         whileHover={{ scale: 1.05 }}
-        className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        onDragEnd={(e, info) => {
+          if (info.offset.x > 50) setDragDirection("right");
+          else if (info.offset.x < -50) setDragDirection("left");
+          else setDragDirection(null);
+          // You can add next/prev logic if multiple products are added later
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         {product.image.endsWith(".mp4") ? (
-  <video
-  src={product.image}
-  muted
-  loop
-  playsInline
-  preload="auto"
-  className="w-full h-56 object-cover"
-  autoPlay={/Mobi|Android/i.test(navigator.userAgent)} // autoplay on mobile
-  onMouseEnter={(e) => {
-    if (!/Mobi|Android/i.test(navigator.userAgent)) { // desktop only
-      if (e.currentTarget && typeof e.currentTarget.play === "function") {
-        e.currentTarget.play().catch(() => {});
-      }
-    }
-  }}
-  onMouseLeave={(e) => {
-    if (!/Mobi|Android/i.test(navigator.userAgent)) { // desktop only
-      if (e.currentTarget && typeof e.currentTarget.pause === "function") {
-        e.currentTarget.pause();
-      }
-    }
-  }}
-  />
-):( 
+          <video
+            src={product.image}
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="w-full h-56 object-cover"
+            autoPlay={/Mobi|Android/i.test(navigator.userAgent)}
+            onMouseEnter={(e) => {
+              if (!/Mobi|Android/i.test(navigator.userAgent))
+                e.currentTarget.play().catch(() => {});
+            }}
+            onMouseLeave={(e) => {
+              if (!/Mobi|Android/i.test(navigator.userAgent))
+                e.currentTarget.pause();
+            }}
+          />
+        ) : (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-56 object-cover"
+          />
+        )}
 
-
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-56 object-cover"
-          onMouseEnter={(e) => e.currentTarget.play()}
-          onMouseLeave={(e) => e.currentTarget.pause()}
-           // prevents ghost image on drag
-        />
-  )}
         <div className="p-4 italic">
           <h2 className="text-pink-600 font-bold text-lg">{product.name}</h2>
           <p className="text-gray-700 font-semibold">${product.price}</p>
           <button
             onClick={(e) => {
-              e.stopPropagation(); // prevents Swiper from triggering slide change
+              e.stopPropagation();
               setShowModal(true);
             }}
             className="mt-3 bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition"
@@ -104,6 +100,7 @@ export default function ProductCard({ product, onPauseAutoplay, onResumeAutoplay
         </div>
       </motion.div>
 
+      {/* Modal */}
       {showModal &&
         createPortal(
           <div
@@ -161,6 +158,6 @@ export default function ProductCard({ product, onPauseAutoplay, onResumeAutoplay
           </div>,
           document.body
         )}
-    </>
+    </div>
   );
 }
