@@ -3,6 +3,7 @@ import { motion, useAnimation } from "framer-motion";
 import Hero from "../components/Hero";
 import ProductCard from "../components/ProductCard";
 import AboutWork from "../components/AboutWork";
+import Reviews from "../components/Reviews";
 import AboutOwner from "../components/AboutOwner";
 import Footer from "../components/Footer";
 import { ChevronLeft, ChevronRight } from "lucide-react"; // icon library
@@ -89,6 +90,7 @@ export default function Home() {
 
       {/* About Work */}
       <AboutWork />
+      <Reviews/>
 
       {/* About Owner */}
       <AboutOwner />
