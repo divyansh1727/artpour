@@ -11,7 +11,8 @@ import p1 from "../assets/products/p1.jpg";
 import p2 from "../assets/products/p2.jpg";
 import p3 from "../assets/products/p3.jpg";
 import p4 from "../assets/products/p4.jpg";
-import V1 from "../assets/products/v1.mp4"
+import V1 from "../assets/products/v1.mp4";
+import ProductsList from "../components/ProductsList";
 
 const products = [
   { id: 1, name: "Rakhi", price: 25, image: p1 },
@@ -82,6 +83,8 @@ export default function Home() {
             {products.map((p) => (
               <div key={p.id} className="flex-shrink-0 w-72 p-2">
                 <ProductCard product={p} />
+                
+
               </div>
             ))}
           </motion.div>
