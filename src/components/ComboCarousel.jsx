@@ -104,31 +104,38 @@ const ComboCarousel = ({ products = [], autoPlay = true, interval = 4000 }) => {
     >
       <AnimatePresence initial={false} mode="wait" custom={direction}>
         <motion.div
-          key={product.id ?? currentIndex}
-          className="p-4 bg-gray-900 rounded-lg shadow-lg text-center cursor-grab"
-          custom={direction}
-          initial={{ x: direction >= 0 ? 300 : -300, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: direction >= 0 ? -300 : 300, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          drag="x"
-          dragElastic={0.2}
-          dragMomentum={false}
-          onDragEnd={handleDragEnd}
-          style={{ touchAction: "pan-y" }} // ✅ allows vertical scroll on mobile
-        >
-          <ProductCard
-            product={product}
-            pauseCarousel={(paused) => {
-              if (paused) {
-                clearInterval(timerRef.current);
-                timerRef.current = null;
-              } else if (autoPlay && products.length > 1) {
-                timerRef.current = setInterval(nextSlide, interval);
-              }
-            }}
-          />
-        </motion.div>
+  key={product.id ?? currentIndex}
+  className="p-4 bg-gray-900 rounded-lg shadow-lg text-center cursor-grab"
+  custom={direction}
+  initial={{ x: direction >= 0 ? 300 : -300, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  exit={{ x: direction >= 0 ? -300 : 300, opacity: 0 }}
+  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+  drag="x"
+  dragElastic={0.2}
+  dragMomentum={false}
+  onDragEnd={handleDragEnd}
+  onTap={(e) => {
+    e.stopPropagation();
+    // ✅ force it to open ProductCard modal
+    const clickable = document.querySelector(`#card-${product.id}`);
+    if (clickable) clickable.click();
+  }}
+  style={{ touchAction: "pan-y" }}
+>
+  <div id={`card-${product.id}`}>
+    <ProductCard
+      product={product}
+      pauseCarousel={(paused) => {
+        if (paused) clearInterval(timerRef.current);
+        else if (autoPlay && products.length > 1) {
+          timerRef.current = setInterval(nextSlide, interval);
+        }
+      }}
+    />
+  </div>
+</motion.div>
+
       </AnimatePresence>
 
       {products.length > 1 && (
