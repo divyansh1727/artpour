@@ -2,17 +2,10 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { createPortal } from "react-dom";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, onSwipe }) {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", address: "" });
   const [loading, setLoading] = useState(false);
-
-  // Optional swipe tracking state
-  const [dragDirection, setDragDirection] = useState(null);
-
-  useEffect(() => {
-    // pause autoplay if you have any
-  }, [showModal]);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,20 +38,7 @@ export default function ProductCard({ product }) {
   return (
     <div className="relative w-full max-w-5xl mx-auto">
       {/* Swipeable product card */}
-      <motion.div
-        key={product.id}
-        className="bg-white rounded-xl shadow-lg overflow-hidden cursor-grab"
-        whileHover={{ scale: 1.05 }}
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        onDragEnd={(e, info) => {
-          if (info.offset.x > 50) setDragDirection("right");
-          else if (info.offset.x < -50) setDragDirection("left");
-          else setDragDirection(null);
-          // You can add next/prev logic if multiple products are added later
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      >
+     
         {product.image.endsWith(".mp4") ? (
           <video
             src={product.image}
@@ -67,13 +47,13 @@ export default function ProductCard({ product }) {
             playsInline
             preload="auto"
             className="w-full h-56 object-cover"
-            autoPlay={/Mobi|Android/i.test(navigator.userAgent)}
+            autoPlay={/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)}
             onMouseEnter={(e) => {
-              if (!/Mobi|Android/i.test(navigator.userAgent))
+              if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
                 e.currentTarget.play().catch(() => {});
             }}
             onMouseLeave={(e) => {
-              if (!/Mobi|Android/i.test(navigator.userAgent))
+              if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
                 e.currentTarget.pause();
             }}
           />
@@ -98,7 +78,7 @@ export default function ProductCard({ product }) {
             Buy
           </button>
         </div>
-      </motion.div>
+      
 
       {/* Modal */}
       {showModal &&

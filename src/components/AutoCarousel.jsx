@@ -17,6 +17,7 @@ export default function AutoCarousel() {
     return () => clearInterval(timer);
   }, [products.length]);
 
+  
   return (
     <div className="overflow-hidden w-full max-w-lg mx-auto">
       <motion.div
