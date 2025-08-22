@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Hero from "../components/Hero";
 import ProductCard from "../components/ProductCard";
 import AboutWork from "../components/AboutWork";
@@ -22,6 +22,7 @@ const products = [
 
 export default function Home() {
   const containerRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   const scrollLeft = () => {
     containerRef.current.scrollBy({ left: -300, behavior: "smooth" });
@@ -30,6 +31,27 @@ export default function Home() {
   const scrollRight = () => {
     containerRef.current.scrollBy({ left: 300, behavior: "smooth" });
   };
+
+  // Auto-scroll logic
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      if (containerRef.current) {
+        containerRef.current.scrollBy({ left: 300, behavior: "smooth" });
+
+        // if reached end → go back to start
+        if (
+          containerRef.current.scrollLeft + containerRef.current.clientWidth >=
+          containerRef.current.scrollWidth - 10
+        ) {
+          containerRef.current.scrollTo({ left: 0, behavior: "smooth" });
+        }
+      }
+    }, 900); // scroll every 3s
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
   return (
     <div className="italic">
@@ -59,6 +81,10 @@ export default function Home() {
         <div
           ref={containerRef}
           className="flex w-full overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
         >
           {products.map((p) => (
             <div
