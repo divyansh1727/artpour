@@ -1,11 +1,11 @@
 import { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import ProductCard from "../components/ProductCard";
 
 const ComboCarousel = ({ products = [], autoPlay = true, interval = 4000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+
   const containerRef = useRef(null);
   const widthRef = useRef(0);
   const timerRef = useRef(null);
@@ -13,23 +13,38 @@ const ComboCarousel = ({ products = [], autoPlay = true, interval = 4000 }) => {
   // Resize listener (for swipe threshold)
   useLayoutEffect(() => {
     const update = () => {
-      if (containerRef.current) widthRef.current = containerRef.current.offsetWidth;
+      if (containerRef.current) {
+        widthRef.current = containerRef.current.offsetWidth;
+      }
     };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  // Auto-play logic
-  useEffect(() => {
-    if (autoPlay && products.length > 1) {
-      timerRef.current = setInterval(() => {
-        nextSlide();
-      }, interval);
-      return () => clearInterval(timerRef.current);
+  // ---- AUTOPLAY HELPERS ----
+  const pauseAuto = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
     }
-  }, [currentIndex, autoPlay, interval, products.length]);
+  };
 
+  const startAuto = () => {
+    if (!autoPlay || products.length <= 1 || timerRef.current) return;
+    timerRef.current = setInterval(() => {
+      nextSlide();
+    }, interval);
+  };
+
+  // Start autoplay once; clean on unmount
+  useEffect(() => {
+    startAuto();
+    return pauseAuto;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoPlay, interval, products.length]);
+
+  // ---- NAVIGATION ----
   const prevSlide = () => {
     setDirection(-1);
     setCurrentIndex((prev) => (prev === 0 ? products.length - 1 : prev - 1));
@@ -40,41 +55,56 @@ const ComboCarousel = ({ products = [], autoPlay = true, interval = 4000 }) => {
     setCurrentIndex((prev) => (prev === products.length - 1 ? 0 : prev + 1));
   };
 
+  // ---- DRAG HANDLING ----
   const handleDragEnd = (_e, info) => {
     const w = widthRef.current || 320;
-    const threshold = w * 0.18;
-    const { offset, velocity } = info;
-    const power = Math.abs(offset.x) + Math.abs(velocity.x) * 25;
+    const threshold = w * 0.25; // stricter so tap != swipe
+    const dx = info.offset.x;
 
-    if (offset.x > threshold || (power > threshold && offset.x > 0)) {
+    if (Math.abs(dx) < threshold) {
+      // treat as a click, not swipe
+      startAuto();
+      return;
+    }
+
+    if (dx > 0) {
       prevSlide();
-    } else if (offset.x < -threshold || (power > threshold && offset.x < 0)) {
+    } else {
       nextSlide();
     }
+
+    startAuto();
   };
 
   if (!products.length) return null;
-
   const product = products[currentIndex];
+
+  // ---- BUTTON HANDLERS ----
+  const handlePrevClick = () => {
+    pauseAuto();
+    prevSlide();
+    startAuto();
+  };
+
+  const handleNextClick = () => {
+    pauseAuto();
+    nextSlide();
+    startAuto();
+  };
 
   return (
     <div
       ref={containerRef}
       className="relative w-full max-w-5xl mx-auto overflow-hidden"
-      onMouseEnter={() => clearInterval(timerRef.current)} // pause on hover (desktop)
-      onMouseLeave={() => {
-  if (autoPlay && products.length > 1) {
-    timerRef.current = setInterval(() => {
-      nextSlide();
-    }, interval);
-  }
-}}
- // resume
+      onMouseEnter={pauseAuto}
+      onMouseLeave={startAuto}
+      onTouchStart={pauseAuto}
+      onTouchEnd={startAuto}
     >
       <AnimatePresence initial={false} mode="wait" custom={direction}>
         <motion.div
           key={product.id ?? currentIndex}
-          className="p-4 bg-gray-900 rounded-lg shadow-lg text-center"
+          className="p-4 bg-gray-900 rounded-lg shadow-lg text-center cursor-grab"
           custom={direction}
           initial={{ x: direction >= 0 ? 300 : -300, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -84,23 +114,23 @@ const ComboCarousel = ({ products = [], autoPlay = true, interval = 4000 }) => {
           dragElastic={0.2}
           dragMomentum={false}
           onDragEnd={handleDragEnd}
-          style={{ touchAction: "pan-y" }} // ensures smooth swipe on iPhone/iPad
+          style={{ touchAction: "pan-y" }} // allows vertical scroll + horizontal swipe
         >
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-64 object-cover rounded-lg mb-4 select-none pointer-events-none"
-            draggable={false}
-          />
-          <h3 className="text-xl font-semibold text-white">{product.name}</h3>
-          <p className="text-gray-400">${product.price}</p>
+          <ProductCard product={product} pauseCarousel={(paused) => {
+  if (paused) clearInterval(timerRef.current);
+  else if (autoPlay && products.length > 1) {
+    timerRef.current = setInterval(nextSlide, interval);
+  }
+}} />
+
+          
         </motion.div>
       </AnimatePresence>
 
       {products.length > 1 && (
         <>
           <button
-            onClick={prevSlide}
+            onClick={handlePrevClick}
             className="absolute top-1/2 -left-6 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black transition z-10"
             aria-label="Previous"
           >
@@ -108,7 +138,7 @@ const ComboCarousel = ({ products = [], autoPlay = true, interval = 4000 }) => {
           </button>
 
           <button
-            onClick={nextSlide}
+            onClick={handleNextClick}
             className="absolute top-1/2 -right-6 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black transition z-10"
             aria-label="Next"
           >

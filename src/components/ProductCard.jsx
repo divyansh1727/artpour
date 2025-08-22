@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { createPortal } from "react-dom";
 
-export default function ProductCard({ product, onSwipe }) {
+export default function ProductCard({ product, onSwipe, pauseCarousel }) {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", address: "" });
   const [loading, setLoading] = useState(false);
@@ -18,9 +18,11 @@ export default function ProductCard({ product, onSwipe }) {
       const encodedText = encodeURIComponent(text);
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-      if (isMobile)
+      if (isMobile) {
         window.location.href = `whatsapp://send?phone=${phoneNumber}&text=${encodedText}`;
-      else window.open(`https://wa.me/${phoneNumber}?text=${encodedText}`, "_blank");
+      } else {
+        window.open(`https://wa.me/${phoneNumber}?text=${encodedText}`, "_blank");
+      }
 
       alert("✅ Order details sent to WhatsApp. Our team will contact you soon!");
       setFormData({ name: "", email: "", address: "" });
@@ -36,60 +38,69 @@ export default function ProductCard({ product, onSwipe }) {
     return <p className="text-center text-white">Product not available</p>;
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto">
-      {/* Swipeable product card */}
-     
-        {product.image.endsWith(".mp4") ? (
-          <video
-            src={product.image}
-            muted
-            loop
-            playsInline
-            preload="auto"
-            className="w-full h-56 object-cover"
-            autoPlay={/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)}
-            onMouseEnter={(e) => {
-              if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
-                e.currentTarget.play().catch(() => {});
-            }}
-            onMouseLeave={(e) => {
-              if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
-                e.currentTarget.pause();
-            }}
-          />
-        ) : (
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-56 object-cover"
-          />
-        )}
+    <div
+      className="relative w-full max-w-5xl mx-auto"
+      onClick={(e) => e.stopPropagation()} // ✅ prevent bubble to carousel
+    >
+      {/* Media */}
+      {product.image.endsWith(".mp4") ? (
+        <video
+          src={product.image}
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="w-full h-56 object-cover rounded-lg"
+          autoPlay={/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)}
+          onMouseEnter={(e) => {
+            if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+              e.currentTarget.play().catch(() => {});
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+              e.currentTarget.pause();
+            }
+          }}
+        />
+      ) : (
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-56 object-cover rounded-lg"
+          draggable={false}
+        />
+      )}
 
-        <div className="p-4 italic">
-          <h2 className="text-pink-600 font-bold text-lg">{product.name}</h2>
-          <p className="text-gray-700 font-semibold">${product.price}</p>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowModal(true);
-            }}
-            className="mt-3 bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition"
-          >
-            Buy
-          </button>
-        </div>
-      
+      {/* Info */}
+      <div className="p-4 italic">
+        <h2 className="text-pink-600 font-bold text-lg">{product.name}</h2>
+        <p className="text-gray-700 font-semibold">${product.price}</p>
+        <button
+          onClick={(e) => {
+            e.stopPropagation(); // ✅ stop carousel click
+            setShowModal(true);
+            if (pauseCarousel) pauseCarousel(true); // ✅ pause autoplay
+          }}
+          className="mt-3 bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition"
+        >
+          Buy
+        </button>
+      </div>
 
       {/* Modal */}
       {showModal &&
         createPortal(
           <div
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]"
-            onClick={() => setShowModal(false)}
+            onClick={() => {
+              setShowModal(false);
+              if (pauseCarousel) pauseCarousel(false); // ✅ resume autoplay
+            }}
           >
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
               className="bg-white rounded-xl p-6 w-96 max-w-full italic"
               onClick={(e) => e.stopPropagation()}
             >
@@ -121,7 +132,10 @@ export default function ProductCard({ product, onSwipe }) {
               />
               <div className="flex justify-end gap-2 mt-2">
                 <button
-                  onClick={() => setShowModal(false)}
+                  onClick={() => {
+                    setShowModal(false);
+                    if (pauseCarousel) pauseCarousel(false);
+                  }}
                   className="px-4 py-2 rounded-full bg-gray-300 hover:bg-gray-400 transition italic"
                 >
                   Cancel
