@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { useRef } from "react";
 import Hero from "../components/Hero";
-import ProductsList from "../components/ProductsList";
+import ProductCard from "../components/ProductCard";
 import AboutWork from "../components/AboutWork";
 import Reviews from "../components/Reviews";
 import AboutOwner from "../components/AboutOwner";
 import Footer from "../components/Footer";
-import { ChevronLeft, ChevronRight } from "lucide-react"; // icon library
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import p1 from "../assets/products/p1.jpg";
 import p2 from "../assets/products/p2.jpg";
 import p3 from "../assets/products/p3.jpg";
@@ -22,34 +21,21 @@ const products = [
 ];
 
 export default function Home() {
-  const [isPaused, setIsPaused] = useState(false);
-  const controls = useAnimation();
   const containerRef = useRef(null);
 
-  useEffect(() => {
-    if (!isPaused) {
-      controls.start({
-        x: ["0%", "-25%", "-50%", "-75%", "0%"],
-        transition: { duration: 16, ease: "linear", repeat: Infinity },
-      });
-    } else {
-      controls.stop();
-    }
-  }, [isPaused, controls]);
-
-  // Manual scroll for arrow buttons
   const scrollLeft = () => {
-    containerRef.current.scrollBy({ left: -250, behavior: "smooth" });
+    containerRef.current.scrollBy({ left: -300, behavior: "smooth" });
   };
+
   const scrollRight = () => {
-    containerRef.current.scrollBy({ left: 250, behavior: "smooth" });
+    containerRef.current.scrollBy({ left: 300, behavior: "smooth" });
   };
 
   return (
     <div className="italic">
       <Hero />
 
-      {/* Featured Products Section */}
+      {/* Featured Products Slider */}
       <section className="relative w-full py-12" id="featured-products">
         <h2 className="text-3xl font-bold text-center text-pink-600 mb-12">
           Featured Products
@@ -69,26 +55,25 @@ export default function Home() {
           <ChevronRight />
         </button>
 
-        {/* Products List Component */}
+        {/* Products Row */}
         <div
           ref={containerRef}
-          className="flex w-full overflow-x-auto scrollbar-hide relative"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={() => setIsPaused(true)}
-          onTouchEnd={() => setIsPaused(false)}
+          className="flex w-full overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
         >
-          <motion.div animate={controls} className="flex min-w-max">
-            <ProductsList products={products} />
-          </motion.div>
+          {products.map((p) => (
+            <div
+              key={p.id}
+              className="flex-shrink-0 w-72 p-2 snap-center"
+            >
+              <ProductCard product={p} />
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* About Work */}
+      {/* Other Sections */}
       <AboutWork />
       <Reviews />
-
-      {/* About Owner */}
       <AboutOwner />
       <Footer />
     </div>
