@@ -1,6 +1,7 @@
 import { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import ProductCard from "./ProductCard"; // ✅ make sure path is correct
 
 const ComboCarousel = ({ products = [], autoPlay = true, interval = 4000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -58,11 +59,11 @@ const ComboCarousel = ({ products = [], autoPlay = true, interval = 4000 }) => {
   // ---- DRAG HANDLING ----
   const handleDragEnd = (_e, info) => {
     const w = widthRef.current || 320;
-    const threshold = w * 0.25; // stricter so tap != swipe
+    const threshold = w * 0.15; // ✅ smaller threshold for tap vs swipe
     const dx = info.offset.x;
 
     if (Math.abs(dx) < threshold) {
-      // treat as a click, not swipe
+      // ✅ treat as a click → don’t change slide
       startAuto();
       return;
     }
@@ -114,16 +115,19 @@ const ComboCarousel = ({ products = [], autoPlay = true, interval = 4000 }) => {
           dragElastic={0.2}
           dragMomentum={false}
           onDragEnd={handleDragEnd}
-          style={{ touchAction: "pan-y" }} // allows vertical scroll + horizontal swipe
+          style={{ touchAction: "pan-y" }} // ✅ allows vertical scroll on mobile
         >
-          <ProductCard product={product} pauseCarousel={(paused) => {
-  if (paused) clearInterval(timerRef.current);
-  else if (autoPlay && products.length > 1) {
-    timerRef.current = setInterval(nextSlide, interval);
-  }
-}} />
-
-          
+          <ProductCard
+            product={product}
+            pauseCarousel={(paused) => {
+              if (paused) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+              } else if (autoPlay && products.length > 1) {
+                timerRef.current = setInterval(nextSlide, interval);
+              }
+            }}
+          />
         </motion.div>
       </AnimatePresence>
 
