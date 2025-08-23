@@ -1,16 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Rajdhani:wght@600;700&display=swap');
 @import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+
+
 body {
-  @apply font-sans bg-white text-gray-800;
+  font-family: 'Space Grotesk', sans-serif; /* futuristic body */
 }
 
-.carousel-container {
-  overflow: hidden;
-  touch-action: pan-x; /* enables touch swiping */
+h1, h2, h3, .section-title {
+  font-family: 'Rajdhani', sans-serif; /* bold headings */
+  font-weight: 700;
+  letter-spacing: 1px;
 }
-body {
-  @apply italic;
-}
+

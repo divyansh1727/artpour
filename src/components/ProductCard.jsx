@@ -10,29 +10,54 @@ export default function ProductCard({ product }) {
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  const formatPrice = (price) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(price);
+
   const handleBuy = () => {
-    setLoading(true);
-    try {
-      const phoneNumber = "917838548016";
-      const text = `*New Purchase Request*\n\n_Product_: ${product.name}\n_Price_: $${product.price}\n\n*Customer Info:*\nName: ${formData.name}\nEmail: ${formData.email}\nAddress: ${formData.address}`;
-      const encodedText = encodeURIComponent(text);
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  setLoading(true);
+  try {
+    const phoneNumber = "917838548016";
 
-      if (isMobile) {
-        window.location.href = `whatsapp://send?phone=${phoneNumber}&text=${encodedText}`;
-      } else {
-        window.open(`https://wa.me/${phoneNumber}?text=${encodedText}`, "_blank");
+    // build message dynamically
+    let text = `*New Purchase Request*\n\n`;
+    text += `_Product_: ${product.name}\n`;
+    text += `_Price_: ${formatPrice(product.price)}\n`;
+
+    if (product.description) {
+      text += `_Description_: ${product.description}\n`;
+      if (product.descriptionPrice) {
+        text += `_Description Price_: ${formatPrice(product.descriptionPrice)}\n`;
       }
-
-      alert("✅ Order details sent to WhatsApp. Our team will contact you soon!");
-      setFormData({ name: "", email: "", address: "" });
-      setShowModal(false);
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong. Please try again.");
     }
-    setLoading(false);
-  };
+
+    if (product.bulkPrice) {
+      text += `_Bulk Price_: ${formatPrice(product.bulkPrice)} / piece\n`;
+    }
+
+    text += `\n*Customer Info:*\nName: ${formData.name}\nEmail: ${formData.email}\nAddress: ${formData.address}`;
+
+    const encodedText = encodeURIComponent(text);
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      window.location.href = `whatsapp://send?phone=${phoneNumber}&text=${encodedText}`;
+    } else {
+      window.open(`https://wa.me/${phoneNumber}?text=${encodedText}`, "_blank");
+    }
+
+    alert("✅ Order details sent to WhatsApp. Our team will contact you soon!");
+    setFormData({ name: "", email: "", address: "" });
+    setShowModal(false);
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong. Please try again.");
+  }
+  setLoading(false);
+};
+
 
   if (!product) return <p className="text-center text-white">Product not available</p>;
 
@@ -44,7 +69,19 @@ export default function ProductCard({ product }) {
       transition={{ duration: 0.5 }}
     >
       {/* Media */}
-      {product.image.endsWith(".mp4") ? (
+      {product.images ? (
+  <div className="grid grid-cols-2 gap-2">
+    {product.images.map((img, i) => (
+      <img
+        key={i}
+        src={img}
+        alt={`${product.name}-${i}`}
+        className="w-full h-40 object-cover rounded-xl"
+        draggable={false}
+      />
+    ))}
+  </div>
+     ): product.image.endsWith(".mp4") ? (
         <video
           src={product.image}
           muted
@@ -63,17 +100,43 @@ export default function ProductCard({ product }) {
         />
       )}
 
-      {/* Info */}
-      <div className="p-4">
-        <h2 className="text-pink-600 font-bold text-lg">{product.name}</h2>
-        <p className="text-gray-200 font-semibold">${product.price}</p>
-        <button
-          onClick={() => setShowModal(true)}
-          className="mt-3 w-full bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition"
-        >
-          Buy
-        </button>
-      </div>
+    
+   
+{/* Info */}
+<div className="p-4">
+  <h2 className="text-pink-600 font-bold text-lg">{product.name}</h2>
+
+  {/* Description if available */}
+  {product.description && (
+    <p className="text-gray-400 text-sm mb-1">
+      {product.description}{" "}
+      {product.descriptionPrice && (
+        <span className="text-gray-300 font-semibold">
+          - {formatPrice(product.descriptionPrice)}
+        </span>
+      )}
+    </p>
+  )}
+
+  {/* Prices */}
+  <p className="text-gray-200 font-semibold">
+    {formatPrice(product.price)}{" "}
+    {product.bulkPrice && (
+      <span className="text-sm text-gray-400">
+        | Bulk: {formatPrice(product.bulkPrice)} / piece
+      </span>
+    )}
+  </p>
+
+  <button
+    onClick={() => setShowModal(true)}
+    className="mt-3 w-full bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition"
+  >
+    Buy
+  </button>
+</div>
+
+
 
       {/* Modal */}
       {showModal &&
@@ -88,7 +151,9 @@ export default function ProductCard({ product }) {
               className="bg-white rounded-xl p-6 w-96 max-w-full"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="text-xl font-bold text-pink-600 mb-4">Buy {product.name}</h3>
+              <h3 className="text-xl font-bold text-pink-600 mb-4">
+                Buy {product.name}
+              </h3>
               <input
                 type="text"
                 name="name"
