@@ -70,13 +70,13 @@ export default function ProductCard({ product }) {
     >
       {/* Media */}
       {product.images ? (
-  <div className="grid grid-cols-2 gap-2">
+  <div className="grid grid-cols-2 gap-2 w-full h-64">
     {product.images.map((img, i) => (
       <img
         key={i}
         src={img}
         alt={`${product.name}-${i}`}
-        className="w-full h-40 object-cover rounded-xl"
+        className="w-full h-full object-cover rounded-lg"
         draggable={false}
       />
     ))}

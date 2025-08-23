@@ -18,7 +18,7 @@ export default function AboutOwner() {
           className="w-40 h-40 rounded-full mx-auto mb-4 object-cover shadow-lg border-4 border-pink-200"
         />
         <p className="font-sans text-gray-700 max-w-xl mx-auto leading-relaxed">
-          Hi! I’m <span className="font-bold text-pink-500">PourByKay</span>, an artist with
+          Hi! I’m <span className="font-bold text-pink-500">Kaveri Verma</span>, an artist with
           a passion for crafting one-of-a-kind handmade creations.  
           From delicate resin art to vibrant mixed media pieces, I put my heart into every detail.  
           I believe that art should not just be seen—it should be felt, experienced, and treasured.

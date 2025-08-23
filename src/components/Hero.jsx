@@ -18,21 +18,21 @@ export default function Hero() {
         animate={{ y: [0, 20, 0], rotate: [0, 15, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       >
-        <Paintbrush size={40} />
+        <Paintbrush size={50} />
       </motion.div>
       <motion.div
         className="absolute top-1/3 right-10 text-pink-600 opacity-50"
         animate={{ y: [0, -15, 0], rotate: [0, -15, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       >
-        <Palette size={39} />
+        <Palette size={50} />
       </motion.div>
       <motion.div
         className="absolute bottom-28 left-1/2 text-pink-400 opacity-60"
         animate={{ y: [0, 10, 0], rotate: [0, 360, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       >
-        <Box size={40} />
+        <Box size={50} />
       </motion.div>
 
       {/* Hero Text */}
@@ -71,7 +71,7 @@ export default function Hero() {
         transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
         className="absolute bottom-8 text-pink-600"
       >
-        <ArrowDown size={28} />
+        <ArrowDown size={35} />
       </motion.div>
     </section>
   );

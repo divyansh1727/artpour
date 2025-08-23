@@ -61,9 +61,9 @@ const products = [
   { id: 11, name: "Kitchen Resin Tray", price: 1200, image: p13 },
   { id: 12, name: "Bookmark", price: 200, image: k2},
   { id: 13, name: "Phone Charm", price: 200, image: k1},
-  { id: 14, name: "Keychain", price: 250, image: q1},
-  { id: 14, name: "Dashboard Decor", price: 100, image: q3},
-  { id: 14, name: "Love Letter", price: 100, image: q2},
+  { id: 15, name: "Keychain", price: 250, image: q1},
+  { id: 16, name: "Dashboard Decor", price: 100, image: q3},
+  { id: 17, name: "Love Letter", price: 100, image: q2},
 
 
 
@@ -100,7 +100,7 @@ export default function Home() {
           containerRef.current.scrollTo({ left: 0, behavior: "smooth" });
         }
       }
-    }, 670); // scroll every 3s
+    }, 1400); 
 
     return () => clearInterval(interval);
   }, [isPaused]);
