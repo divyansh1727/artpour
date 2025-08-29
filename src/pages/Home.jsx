@@ -6,6 +6,8 @@ import Reviews from "../components/Reviews";
 import AboutOwner from "../components/AboutOwner";
 import Footer from "../components/Footer";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+// your product imports...
 import p1 from "../assets/products/p1.jpg";
 import p2 from "../assets/products/p2.jpg";
 import V1 from "../assets/products/v1.mp4";
@@ -25,35 +27,26 @@ import q1 from "../assets/images/q1.jpg";
 import q3 from "../assets/images/q3.jpg";
 import q2 from "../assets/images/q2.jpg";
 
-
-
-
-
-
-
-
-
 const products = [
   { id: 1, name: "Rakhi", price: 90 ,bulkPrice: 50, image: p1 },
   { id: 2, name: "Customised Photo holder", price: 650, image: p2 },
   { id: 5, name: "Customised Photo keychain", price:250, image: V1 },
   {
-  id: 6,
-  name: "Spritual Polaroid",
-  price: 50,
-  image: p7,
-  description: "Fridge magnet, dashboard decor",
-  descriptionPrice: 100,
-  bulkPrice: 60
-},
-{
-  id: 20,
-  name: "Hamper",
-  price: 500,
-  description:"customisable",
-  images: [h1, h2, h3,h4], // put all 4 photos here
-},
-
+    id: 6,
+    name: "Spritual Polaroid",
+    price: 50,
+    image: p7,
+    description: "Fridge magnet, dashboard decor",
+    descriptionPrice: 100,
+    bulkPrice: 60
+  },
+  {
+    id: 20,
+    name: "Hamper",
+    price: 500,
+    description:"customisable",
+    images: [h1, h2, h3,h4],
+  },
   { id: 7, name: "Customised Phone Cover", price: 250, image: p9 },
   { id: 8, name: "Customised seashell keychain", price: 300, image: p10 },
   { id: 9, name: "Phone Cover", price: 250, image: p11 },
@@ -64,17 +57,13 @@ const products = [
   { id: 15, name: "Keychain", price: 250, image: q1},
   { id: 16, name: "Dashboard Decor", price: 100, image: q3},
   { id: 17, name: "Love Letter", price: 100, image: q2},
-
-
-
-
-
-
 ];
 
 export default function Home() {
   const containerRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showAllProducts, setShowAllProducts] = useState(false); // 👈 new
 
   const scrollLeft = () => {
     containerRef.current.scrollBy({ left: -300, behavior: "smooth" });
@@ -86,13 +75,12 @@ export default function Home() {
 
   // Auto-scroll logic
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || showAllProducts) return; // 👈 stop auto scroll in grid view
 
     const interval = setInterval(() => {
       if (containerRef.current) {
         containerRef.current.scrollBy({ left: 300, behavior: "smooth" });
 
-        // if reached end → go back to start
         if (
           containerRef.current.scrollLeft + containerRef.current.clientWidth >=
           containerRef.current.scrollWidth - 10
@@ -103,53 +91,71 @@ export default function Home() {
     }, 1400); 
 
     return () => clearInterval(interval);
-  }, [isPaused]);
+  }, [isPaused, showAllProducts]);
+
+  // 🔍 Filter products case-insensitive
+  const filteredProducts = products.filter((p) =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="italic">
-      <Hero />
+      <Hero onSearch={setSearchQuery} onExplore={() => setShowAllProducts(true)} />
 
-      {/* Featured Products Slider */}
+      {/* Products Section */}
       <section className="relative w-full py-12" id="featured-products">
         <h2 className="text-3xl font-bold text-center text-pink-600 mb-12">
-          Featured Products
+          {showAllProducts ? "All Products" : "Featured Products"}
         </h2>
 
-        {/* Arrow Buttons */}
-        <button
-          onClick={scrollLeft}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
-        >
-          <ChevronLeft />
-        </button>
-        <button
-          onClick={scrollRight}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
-        >
-          <ChevronRight />
-        </button>
-
-        {/* Products Row */}
-        <div
-          ref={containerRef}
-          className="flex w-full overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={() => setIsPaused(true)}
-          onTouchEnd={() => setIsPaused(false)}
-        >
-          {products.map((p) => (
-            <div
-              key={p.id}
-              className="flex-shrink-0 w-72 p-2 snap-center"
+        {filteredProducts.length === 0 ? (
+          <p className="text-center text-gray-600 italic">
+            No products found for "{searchQuery}"
+          </p>
+        ) : showAllProducts ? (
+          // 👉 Full Grid Layout
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-6">
+            {filteredProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        ) : (
+          // 👉 Existing Slider
+          <>
+            <button
+              onClick={scrollLeft}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
             >
-              <ProductCard product={p} />
+              <ChevronLeft />
+            </button>
+            <button
+              onClick={scrollRight}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200"
+            >
+              <ChevronRight />
+            </button>
+
+            <div
+              ref={containerRef}
+              className="flex w-full overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onTouchStart={() => setIsPaused(true)}
+              onTouchEnd={() => setIsPaused(false)}
+            >
+              {filteredProducts.map((p) => (
+                <div
+                  key={p.id}
+                  className="flex-shrink-0 w-72 p-2 snap-center"
+                >
+                  <ProductCard product={p} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </section>
 
-      {/* Other Sections */}
       <AboutWork />
       <Reviews />
       <AboutOwner />

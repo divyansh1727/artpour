@@ -1,17 +1,25 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";  // ✅ for navigation
 import { motion } from "framer-motion";
-import { ArrowDown, Paintbrush, Palette, Box } from "lucide-react";
+import { ArrowDown, Paintbrush, Palette, Box, Search } from "lucide-react";
 
-export default function Hero() {
-  const scrollToProducts = () => {
-    const element = document.getElementById("featured-products");
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+export default function Hero({ onSearch }) {
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate(); // ✅ navigation hook
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    if (onSearch) onSearch(value); // 🔥 still sends search to parent if needed
+  };
+
+  // ✅ instead of scrolling, go to /products
+  const goToProducts = () => {
+    navigate("/products");
   };
 
   return (
     <section className="relative min-h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden italic">
-
       {/* ✅ Background Video */}
       <video
         autoPlay
@@ -21,10 +29,7 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full object-cover -z-10"
       >
         <source src="/VV.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
       </video>
-
-      {/* ✅ Dark Overlay */}
       <div className="absolute inset-0 bg-black/40 -z-10"></div>
 
       {/* Floating art icons */}
@@ -66,16 +71,36 @@ export default function Hero() {
         transition={{ duration: 1, delay: 0.5 }}
         className="text-lg md:text-xl text-white/90 mb-8 max-w-xl drop-shadow"
       >
-        Unique, handcrafted art pieces made with love. Discover and bring home creativity!
+        Unique, handcrafted art pieces made with love. Discover and bring home
+        creativity!
       </motion.p>
 
-      {/* Explore Button */}
+      {/* 🔍 Search Bar */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.8 }}
+        className="relative w-full max-w-md mb-8"
+      >
+        <div className="flex items-center bg-white rounded-full shadow-md overflow-hidden">
+          <input
+            type="text"
+            value={query}
+            onChange={handleSearch}
+            placeholder="Search for art..."
+            className="flex-1 px-4 py-2 text-gray-700 outline-none"
+          />
+          <Search className="text-pink-600 mx-3" />
+        </div>
+      </motion.div>
+
+      {/* ✅ Explore Button (navigates to /products) */}
       <motion.button
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 1 }}
         className="bg-pink-600 text-white px-6 py-3 rounded-full font-bold hover:bg-pink-500 transition mb-20 shadow-lg"
-        onClick={scrollToProducts}
+        onClick={goToProducts}
       >
         Explore Products
       </motion.button>

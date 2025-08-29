@@ -1,4 +1,4 @@
-import ownerImg from "../assets/images/ownerr.jpg";
+
 import "../stars.css"; // We'll add our star animation here
 
 export default function AboutOwner() {
@@ -13,7 +13,7 @@ export default function AboutOwner() {
           About the Owner
         </h2>
         <img
-          src={ownerImg}
+          src="/logo.png"
           alt="PourByKay"
           className="w-40 h-40 rounded-full mx-auto mb-4 object-cover shadow-lg border-4 border-pink-200"
         />
