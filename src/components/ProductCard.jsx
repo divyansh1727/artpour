@@ -25,6 +25,12 @@ export default function ProductCard({ product }) {
     let text = `*New Purchase Request*\n\n`;
     text += `_Product_: ${product.name}\n`;
     text += `_Price_: ${formatPrice(product.price)}\n`;
+    if (product.discount) {
+  const discounted = product.price - (product.price * product.discount) / 100;
+  text += `_Discount_: ${product.discount}%\n`;
+  text += `_Discounted Price_: ${formatPrice(discounted)}\n`;
+}
+
 
     if (product.description) {
       text += `_Description_: ${product.description}\n`;
@@ -119,14 +125,37 @@ export default function ProductCard({ product }) {
   )}
 
   {/* Prices */}
-  <p className="text-gray-200 font-semibold">
-    {formatPrice(product.price)}{" "}
-    {product.bulkPrice && (
-      <span className="text-sm text-gray-400">
-        | Bulk: {formatPrice(product.bulkPrice)} / piece
+ {/* Price with discount support */}
+<div className="text-gray-200 font-semibold">
+  {product.discount ? (
+    <>
+      <span className="text-gray-400 line-through mr-2">
+        {formatPrice(product.price)}
       </span>
-    )}
-  </p>
+      <span className="text-green-400">
+        {formatPrice(product.price - (product.price * product.discount) / 100)}
+      </span>
+      <span className="text-sm text-pink-500 ml-2">
+        ({product.discount}% OFF)
+      </span>
+      
+
+    </>
+  ) : (
+    formatPrice(product.price)
+  )}
+  {product.bulkPrice && (
+    <span className="text-sm text-gray-400">
+      {" "} | Bulk: {formatPrice(product.bulkPrice)} / piece
+    </span>
+  )}
+  {product.offer && (
+    <div className="text-sm text-pink-400 mt-1">
+      ₹{product.price} {product.offer}
+    </div>
+  )}
+</div>
+
 
   <button
     onClick={() => setShowModal(true)}

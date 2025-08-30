@@ -1,5 +1,6 @@
 import React from "react";
 import { FaInstagram, FaFacebook, FaWhatsapp, FaEnvelope } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -12,6 +13,14 @@ export default function Footer() {
         <a href="mailto:pourbykay@example.com"><FaEnvelope /></a>
       </div>
       <p>© {new Date().getFullYear()} PourByKay. All rights reserved.</p>
+      <div className="mt-3">
+        <Link
+          to="/admin-login"
+          className="text-lg text-black hover:text-white"
+        >
+          Admin Login
+        </Link>
+      </div>
     </footer>
   );
 }
