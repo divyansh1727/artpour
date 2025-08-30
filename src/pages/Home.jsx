@@ -51,7 +51,7 @@ export default function Home() {
   );
 
   return (
-    <div className="italic">
+    <div className="bold">
       <Hero onSearch={setSearchQuery} onExplore={() => setShowAllProducts(true)} />
 
       {/* Products Section */}

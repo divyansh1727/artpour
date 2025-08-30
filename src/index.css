@@ -1,19 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Rajdhani:wght@600;700&display=swap');
+
+/* Tailwind */
 @import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-
-
+/* Base font setup */
 body {
-  font-family: 'Space Grotesk', sans-serif; /* futuristic body */
+  font-family: 'Space Grotesk', sans-serif; /* clean futuristic body */
 }
 
 h1, h2, h3, .section-title {
-  font-family: 'Rajdhani', sans-serif; /* bold headings */
+  font-family: 'Rajdhani', sans-serif; /* bold headings by default */
   font-weight: 700;
   letter-spacing: 1px;
 }
 
+/* Utility class for when you want Noto Serif */
+.font-noto {
+  font-family: 'Noto Serif', serif !important;
+}

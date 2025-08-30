@@ -19,7 +19,7 @@ export default function Hero({ onSearch }) {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden italic">
+    <section className="relative min-h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden font-bold">
       {/* ✅ Background Video */}
       <video
         autoPlay
@@ -57,13 +57,13 @@ export default function Hero({ onSearch }) {
 
       {/* Hero Text */}
       <motion.h1
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        className="text-5xl md:text-6xl font-script text-white drop-shadow-lg mb-6"
-      >
-        Handmade Art & Craft by PourByKay
-      </motion.h1>
+  initial={{ opacity: 0, y: -50 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1 }}
+  className="text-5xl md:text-6xl font-noto font-bold text-white drop-shadow-lg mb-6"
+>
+  Handmade Art & Craft by PourByKay
+</motion.h1>
 
       <motion.p
         initial={{ opacity: 0, y: 20 }}

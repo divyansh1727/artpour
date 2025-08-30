@@ -6,7 +6,8 @@ export default {
       fontFamily: {
         sans: ["Poppins", "sans-serif"],      // Default body
         heading: ["Playfair Display", "serif"], // For headings
-        script: ["Dancing Script", "cursive"],  // For logo or special elements
+        script: ["Dancing Script", "cursive"],
+        noto: ['"Noto Serif"', 'serif'],  // For logo or special elements
       },
     },
   },
