@@ -17,77 +17,74 @@ export default function ProductCard({ product }) {
     }).format(price);
 
   const handleBuy = () => {
-  setLoading(true);
-  try {
-    const phoneNumber = "917838548016";
+    setLoading(true);
+    try {
+      const phoneNumber = "917838548016";
 
-    // build message dynamically
-    let text = `*New Purchase Request*\n\n`;
-    text += `_Product_: ${product.name}\n`;
-    text += `_Price_: ${formatPrice(product.price)}\n`;
-    if (product.discount) {
-  const discounted = product.price - (product.price * product.discount) / 100;
-  text += `_Discount_: ${product.discount}%\n`;
-  text += `_Discounted Price_: ${formatPrice(discounted)}\n`;
-}
-
-
-    if (product.description) {
-      text += `_Description_: ${product.description}\n`;
-      if (product.descriptionPrice) {
-        text += `_Description Price_: ${formatPrice(product.descriptionPrice)}\n`;
+      let text = `*New Purchase Request*\n\n`;
+      text += `_Product_: ${product.name}\n`;
+      text += `_Price_: ${formatPrice(product.price)}\n`;
+      if (product.discount) {
+        const discounted = product.price - (product.price * product.discount) / 100;
+        text += `_Discount_: ${product.discount}%\n`;
+        text += `_Discounted Price_: ${formatPrice(discounted)}\n`;
       }
+
+      if (product.description) {
+        text += `_Description_: ${product.description}\n`;
+        if (product.descriptionPrice) {
+          text += `_Description Price_: ${formatPrice(product.descriptionPrice)}\n`;
+        }
+      }
+
+      if (product.bulkPrice) {
+        text += `_Bulk Price_: ${formatPrice(product.bulkPrice)} / piece\n`;
+      }
+
+      text += `\n*Customer Info:*\nName: ${formData.name}\nEmail: ${formData.email}\nAddress: ${formData.address}`;
+
+      const encodedText = encodeURIComponent(text);
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        window.location.href = `whatsapp://send?phone=${phoneNumber}&text=${encodedText}`;
+      } else {
+        window.open(`https://wa.me/${phoneNumber}?text=${encodedText}`, "_blank");
+      }
+
+      alert("✅ Order details sent to WhatsApp. Our team will contact you soon!");
+      setFormData({ name: "", email: "", address: "" });
+      setShowModal(false);
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again.");
     }
-
-    if (product.bulkPrice) {
-      text += `_Bulk Price_: ${formatPrice(product.bulkPrice)} / piece\n`;
-    }
-
-    text += `\n*Customer Info:*\nName: ${formData.name}\nEmail: ${formData.email}\nAddress: ${formData.address}`;
-
-    const encodedText = encodeURIComponent(text);
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      window.location.href = `whatsapp://send?phone=${phoneNumber}&text=${encodedText}`;
-    } else {
-      window.open(`https://wa.me/${phoneNumber}?text=${encodedText}`, "_blank");
-    }
-
-    alert("✅ Order details sent to WhatsApp. Our team will contact you soon!");
-    setFormData({ name: "", email: "", address: "" });
-    setShowModal(false);
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong. Please try again.");
-  }
-  setLoading(false);
-};
-
+    setLoading(false);
+  };
 
   if (!product) return <p className="text-center text-white">Product not available</p>;
 
   return (
     <motion.div
-      className="w-full bg-gray-900 rounded-xl shadow-lg overflow-hidden"
+      className="w-full bg-gray-900 rounded-xl shadow-lg overflow-hidden flex flex-col"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
       {/* Media */}
       {product.images ? (
-  <div className="grid grid-cols-2 gap-2 w-full h-64">
-    {product.images.map((img, i) => (
-      <img
-        key={i}
-        src={img}
-        alt={`${product.name}-${i}`}
-        className="w-full h-full object-cover rounded-lg"
-        draggable={false}
-      />
-    ))}
-  </div>
-     ): product.image.endsWith(".mp4") ? (
+        <div className="grid grid-cols-2 gap-2 w-full h-64">
+          {product.images.map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              alt={`${product.name}-${i}`}
+              className="w-full h-full object-cover rounded-lg"
+              draggable={false}
+            />
+          ))}
+        </div>
+      ) : product.image.endsWith(".mp4") ? (
         <video
           src={product.image}
           muted
@@ -106,57 +103,63 @@ export default function ProductCard({ product }) {
         />
       )}
 
+      {/* Info Section */}
+      <div className="flex flex-col flex-1 p-4 justify-between">
+        <div>
+          <h2 className="text-pink-600 font-bold text-lg">{product.name}</h2>
+
+          {/* Description */}
+          {product.description && (
+            <p className="text-gray-400 text-sm mb-1">
+              {product.description}{" "}
+              {product.descriptionPrice && (
+                <span className="text-gray-300 font-semibold">
+                  - {formatPrice(product.descriptionPrice)}
+                </span>
+              )}
+            </p>
+          )}
+        </div>
+
+       {/* Price + Button */}
+<div className="mt-auto">
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-1 sm:space-y-0">
     
-   
-{/* Info */}
-<div className="p-4">
-  <h2 className="text-pink-600 font-bold text-lg">{product.name}</h2>
-
-  {/* Description if available */}
-  {product.description && (
-    <p className="text-gray-400 text-sm mb-1">
-      {product.description}{" "}
-      {product.descriptionPrice && (
-        <span className="text-gray-300 font-semibold">
-          - {formatPrice(product.descriptionPrice)}
-        </span>
+    {/* Price Section */}
+    <div className="flex items-center flex-wrap gap-2">
+      {product.discount ? (
+        <>
+          <span className="text-gray-400 line-through">
+            {formatPrice(product.price)}
+          </span>
+          <span className="text-green-400 font-semibold">
+            {formatPrice(product.price - (product.price * product.discount) / 100)}
+          </span>
+          <span className="bg-pink-600 text-white text-xs px-2 py-0.5 rounded-full">
+            {product.discount}% OFF
+          </span>
+        </>
+      ) : (
+        <span className="text-gray-200 font-semibold">{formatPrice(product.price)}</span>
       )}
-    </p>
-  )}
+    </div>
 
-  {/* Prices */}
- {/* Price with discount support */}
-<div className="text-gray-200 font-semibold">
-  {product.discount ? (
-    <>
-      <span className="text-gray-400 line-through mr-2">
-        {formatPrice(product.price)}
-      </span>
-      <span className="text-green-400">
-        {formatPrice(product.price - (product.price * product.discount) / 100)}
-      </span>
-      <span className="text-sm text-pink-500 ml-2">
-        ({product.discount}% OFF)
-      </span>
-      
+    {/* Bulk Price */}
+    {product.bulkPrice && (
+      <div className="text-sm text-gray-400">
+        Bulk: {formatPrice(product.bulkPrice)} / piece
+      </div>
+    )}
+  </div>
 
-    </>
-  ) : (
-    formatPrice(product.price)
-  )}
-  {product.bulkPrice && (
-    <span className="text-sm text-gray-400">
-      {" "} | Bulk: {formatPrice(product.bulkPrice)} / piece
-    </span>
-  )}
+  {/* Extra Offer */}
   {product.offer && (
     <div className="text-sm text-pink-400 mt-1">
       ₹{product.price} {product.offer}
     </div>
   )}
-</div>
 
-
+  {/* Buy Button */}
   <button
     onClick={() => setShowModal(true)}
     className="mt-3 w-full bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition"
@@ -165,7 +168,7 @@ export default function ProductCard({ product }) {
   </button>
 </div>
 
-
+      </div>
 
       {/* Modal */}
       {showModal &&

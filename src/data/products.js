@@ -11,8 +11,6 @@ import p12 from "../assets/images/p12.jpg";
 import p13 from "../assets/images/p13.jpg";
 import h1 from "../assets/images/h1.jpg";
 import h2 from "../assets/images/h2.jpg";
-import h3 from "../assets/images/h3.jpg";
-import h4 from "../assets/images/h4.jpg";
 import k2 from "../assets/images/k2.jpg";
 import k1 from "../assets/images/k1.jpg";
 import q1 from "../assets/images/q1.jpg";
@@ -31,7 +29,7 @@ import z1 from "../assets/images/z1.jpg";
 
 export const products = [
   { id: 1, name: "Rakhi", price: 90, bulkPrice: 50, image: p1,discount:20 },
-  { id: 2, name: "Customised Photo holder", price: 650, image: p2,discount:9 },
+  { id: 2, name: "Customised Photo holder", price: 650, image: p2,discount:5 },
   { id: 5, name: "Customised Photo keychain", price: 250, image: V1 },
   {
     id: 6,
@@ -47,7 +45,7 @@ export const products = [
     name: "Hamper",
     price: 500,
     description: "customisable",
-    images: [h1, h2, h3, h4],
+    images: [h1, h2],
   },
   { id: 7, name: "Customised Phone Cover", price: 250, image: p9 },
   { id: 8, name: "Customised seashell keychain", price: 300, image: p10 },

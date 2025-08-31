@@ -9,8 +9,15 @@ export default function Footer() {
       <div className="flex justify-center gap-6 mb-4 text-2xl">
         <a href="https://instagram.com/pourbykay" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
-        <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
-        <a href="mailto:pourbykay@example.com"><FaEnvelope /></a>
+        <a href="https://wa.me/7838548016" target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
+        <a
+  href="https://mail.google.com/mail/?view=cm&fs=1&to=pourbykay1905@gmail.com"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <FaEnvelope />
+</a>
+
       </div>
       <p>© {new Date().getFullYear()} PourByKay. All rights reserved.</p>
       <div className="mt-3">
