@@ -1,5 +1,7 @@
 import ProductCard from "../components/ProductCard";
 import logo from "/logo.png"; // ✅ from public folder
+import a2 from "../assets/images/a2.jpg"
+import a3 from "../assets/images/a3.jpg"
 import p1 from "../assets/products/p1.jpg";
 import p2 from "../assets/products/p2.jpg";
 import V1 from "../assets/products/v1.mp4";
@@ -28,6 +30,14 @@ import z1 from "../assets/images/z1.jpg";
 
 
 export const products = [
+   {
+    id: 23,
+    name: "Karan Aujla Phone Case",
+    price: 600,
+    description: "customisable",
+    images: [a2,a3],
+    discount:50
+  },
   { id: 1, name: "Rakhi", price: 90, bulkPrice: 50, image: p1,discount:20 },
   { id: 2, name: "Customised Photo holder", price: 650, image: p2,discount:5 },
   { id: 5, name: "Customised Photo keychain", price: 250, image: V1 },
