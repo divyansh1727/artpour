@@ -62,14 +62,20 @@ export default function ProductCard({ product }) {
     setLoading(false);
   };
 
-  if (!product) return <p className="text-center text-white">Product not available</p>;
+  if (!product)
+    return <p className="text-center text-white">Product not available</p>;
 
   return (
     <motion.div
       className="w-full bg-gray-900 rounded-xl shadow-lg overflow-hidden flex flex-col"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      variants={{
+        hidden: { opacity: 0, y: 50 },
+        show: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.6, ease: "easeOut" },
+        },
+      }}
     >
       {/* Media */}
       {product.images ? (
@@ -84,7 +90,7 @@ export default function ProductCard({ product }) {
             />
           ))}
         </div>
-      ) : product.image.endsWith(".mp4") ? (
+      ) : product.image?.endsWith(".mp4") ? (
         <video
           src={product.image}
           muted
@@ -121,53 +127,55 @@ export default function ProductCard({ product }) {
           )}
         </div>
 
-       {/* Price + Button */}
-<div className="mt-auto">
-  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-1 sm:space-y-0">
-    
-    {/* Price Section */}
-    <div className="flex items-center flex-wrap gap-2">
-      {product.discount ? (
-        <>
-          <span className="text-gray-400 line-through">
-            {formatPrice(product.price)}
-          </span>
-          <span className="text-green-400 font-semibold">
-            {formatPrice(product.price - (product.price * product.discount) / 100)}
-          </span>
-          <span className="bg-pink-600 text-white text-xs px-2 py-0.5 rounded-full">
-            {product.discount}% OFF
-          </span>
-        </>
-      ) : (
-        <span className="text-gray-200 font-semibold">{formatPrice(product.price)}</span>
-      )}
-    </div>
+        {/* Price + Button */}
+        <div className="mt-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-1 sm:space-y-0">
+            {/* Price Section */}
+            <div className="flex items-center flex-wrap gap-2">
+              {product.discount ? (
+                <>
+                  <span className="text-gray-400 line-through">
+                    {formatPrice(product.price)}
+                  </span>
+                  <span className="text-green-400 font-semibold">
+                    {formatPrice(
+                      product.price - (product.price * product.discount) / 100
+                    )}
+                  </span>
+                  <span className="bg-pink-600 text-white text-xs px-2 py-0.5 rounded-full">
+                    {product.discount}% OFF
+                  </span>
+                </>
+              ) : (
+                <span className="text-gray-200 font-semibold">
+                  {formatPrice(product.price)}
+                </span>
+              )}
+            </div>
 
-    {/* Bulk Price */}
-    {product.bulkPrice && (
-      <div className="text-sm text-gray-400">
-        Bulk: {formatPrice(product.bulkPrice)} / piece
-      </div>
-    )}
-  </div>
+            {/* Bulk Price */}
+            {product.bulkPrice && (
+              <div className="text-sm text-gray-400">
+                Bulk: {formatPrice(product.bulkPrice)} / piece
+              </div>
+            )}
+          </div>
 
-  {/* Extra Offer */}
-  {product.offer && (
-    <div className="text-sm text-pink-400 mt-1">
-      ₹{product.price} {product.offer}
-    </div>
-  )}
+          {/* Extra Offer */}
+          {product.offer && (
+            <div className="text-sm text-pink-400 mt-1">
+              ₹{product.price} {product.offer}
+            </div>
+          )}
 
-  {/* Buy Button */}
-  <button
-    onClick={() => setShowModal(true)}
-    className="mt-3 w-full bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition"
-  >
-    Buy
-  </button>
-</div>
-
+          {/* Buy Button */}
+          <button
+            onClick={() => setShowModal(true)}
+            className="mt-3 w-full bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-500 transition"
+          >
+            Buy
+          </button>
+        </div>
       </div>
 
       {/* Modal */}
