@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SplashScreen from "./components/SplashScreen";
 import Home from "./pages/Home";
 import ProductsPage from "./pages/ProductsPage"; // 🔥 create this page
-import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
 
 
@@ -25,7 +24,7 @@ export default function App() {
         {/* Products page */}
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/admin-login" element={<AdminLogin />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        
       </Routes>
     </Router>
   );

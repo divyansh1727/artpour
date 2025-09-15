@@ -1,10 +1,7 @@
-import ProductCard from "../components/ProductCard";
-import logo from "/logo.png"; // ✅ from public folder
 import { useNavigate } from "react-router-dom";
-
-// ✅ Centralized import
-import { products } from "../data/products";
 import ProductsList from "../components/ProductsList";
+import logo from "/logo.png"; // ✅ from public folder
+import { products } from "../data/products"; // ✅ your static products
 
 export default function ProductsPage() {
   const navigate = useNavigate();
@@ -27,7 +24,7 @@ export default function ProductsPage() {
         All Products
       </h2>
 
-      {/* ✅ Shared ProductsList grid */}
+      {/* ✅ Static ProductsList */}
       <ProductsList products={products} />
     </div>
   );

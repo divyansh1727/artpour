@@ -8,12 +8,12 @@ export default function ProductsList({ products }) {
 
   return (
     <motion.div
-      className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
-      initial="hidden"
+  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+      initial="show"
       whileInView="show"
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ once: true, amount: 0.1 }}
       variants={{
-        hidden: {},
+        hidden: {opacity: 1},
         show: { transition: { staggerChildren: 0.15 } }, // 👈 stagger effect
       }}
     >
