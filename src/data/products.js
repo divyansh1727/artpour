@@ -46,7 +46,7 @@ export const products = [
     name: "Spritual Polaroid",
     price: 300,
     image: p7,
-    description: "Fridge magnet, dashboard decor",
+    description: "Fridge magnet, dashboard decor,Customisable",
     
   },
   {
