@@ -7,6 +7,9 @@ import p2 from "../assets/products/p2.jpg";
 import V1 from "../assets/products/v1.mp4";
 import p7 from "../assets/images/p7.jpg";
 import p9 from "../assets/images/p9.jpg";
+import w1 from "../assets/images/az.jpg";
+import w2 from "../assets/images/b.jpg";
+import w4 from "../assets/images/b1.jpg";
 import p10 from "../assets/images/p10.jpg";
 import p11 from "../assets/images/p11.jpg";
 import p12 from "../assets/images/p12.jpg";
@@ -38,25 +41,41 @@ export const products = [
     images: [a2,a3],
     discount:50
   },
-  { id: 1, name: "Rakhi", price: 90, bulkPrice: 50, image: p1,discount:20 },
-  { id: 2, name: "Customised Photo holder", price: 650, image: p2,discount:5 },
-  { id: 5, name: "Customised Photo keychain", price: 250, image: V1 },
   {
     id: 6,
     name: "Spritual Polaroid",
-    price: 50,
+    price: 300,
     image: p7,
     description: "Fridge magnet, dashboard decor",
-    descriptionPrice: 100,
-    bulkPrice: 60,
+    bulkPrice: 240,
   },
   {
+    id: 56,
+    name: "Personal Polaroid",
+    price: 300,
+    image: w4,
+    description: "Fridge magnet, dashboard decor,Customisable",
+    bulkPrice: 240,
+  },
+   {
     id: 20,
     name: "Hamper",
     price: 500,
     description: "customisable",
     images: [h1, h2],
   },
+  {
+    id: 30,
+    name: "Birthday-Hamper",
+    price: 500,
+    description: "customisable",
+    images: [w1, w2],
+  },
+  { id: 1, name: "Rakhi", price: 90, bulkPrice: 50, image: p1,discount:20 },
+  { id: 2, name: "Customised Photo holder", price: 650, image: p2,discount:5 },
+  { id: 5, name: "Customised Photo keychain", price: 250, image: V1 },
+  
+ 
   { id: 7, name: "Customised Phone Cover", price: 250, image: p9 },
   { id: 8, name: "Customised seashell keychain", price: 300, image: p10 },
   { id: 9, name: "Phone Cover", price: 250, image: p11 },
