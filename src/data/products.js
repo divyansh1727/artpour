@@ -47,7 +47,7 @@ export const products = [
     price: 300,
     image: p7,
     description: "Fridge magnet, dashboard decor",
-    bulkPrice: 240,
+    
   },
   {
     id: 56,
@@ -55,7 +55,7 @@ export const products = [
     price: 300,
     image: w4,
     description: "Fridge magnet, dashboard decor,Customisable",
-    bulkPrice: 240,
+    
   },
    {
     id: 20,
