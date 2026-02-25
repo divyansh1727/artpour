@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import ProductsPage from "./pages/ProductsPage"; // 🔥 create this page
 import AdminLogin from "./pages/AdminLogin";
 import ProductDetails from "./pages/ProductDetails";
+import Cart from "./pages/Cart";
 
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
         
       </Routes>
     </Router>

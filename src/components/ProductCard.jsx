@@ -2,12 +2,14 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", address: "" });
   const [loading, setLoading] = useState(false);
+  const { addToCart } = useCart();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,6 +50,16 @@ export default function ProductCard({ product }) {
     }
     setLoading(false);
   };
+  const handleAddToCart = () => {
+  if (!formData.name || !formData.email || !formData.address) {
+    alert("Please fill in all your details first!");
+    return;
+  }
+
+  addToCart(product, 1); // quantity = 1
+  alert("✅ Product added to cart!");
+  setShowModal(false);
+};
 
   return (
     <>
