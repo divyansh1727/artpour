@@ -35,7 +35,7 @@ const handleSubmit = async (e) => {
   };
 
   try {
-    await axios.post("http://localhost:5000/api/orders", orderData);
+    await axios.post("https://artpour.onrender.com/api/orders", orderData);
 
     alert("Order placed!");
     clearCart();
