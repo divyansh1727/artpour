@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import productRoutes from "./routes/productRoutes.js";
+import ordersRoute from "./routes/orders.js";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // routes
 app.use("/api/products", productRoutes);
+app.use("/api/orders", ordersRoute);
 
 app.get("/", (req, res) => {
   res.send("Pourbykay backend running 🚀");
