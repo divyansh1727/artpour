@@ -4,6 +4,7 @@ import SplashScreen from "./components/SplashScreen";
 import Home from "./pages/Home";
 import ProductsPage from "./pages/ProductsPage"; // 🔥 create this page
 import AdminLogin from "./pages/AdminLogin";
+import ProductDetails from "./pages/ProductDetails";
 
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
         {/* Products page */}
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
         
       </Routes>
     </Router>
