@@ -1,11 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 import productRoutes from "./routes/productRoutes.js";
 import ordersRoute from "./routes/orders.js";
-
-dotenv.config();
+import chatRoutes from "./routes/chat.js"; // 👈 1. Import your new chat route!
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,6 +20,7 @@ mongoose.connect(process.env.MONGO_URI)
 // routes
 app.use("/api/products", productRoutes);
 app.use("/api/orders", ordersRoute);
+app.use("/api", chatRoutes); // 👈 2. Mount it here so it creates /api/chat!
 
 app.get("/", (req, res) => {
   res.send("Pourbykay backend running 🚀");

@@ -8,6 +8,7 @@ import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
+import ArtChat from './components/ArtChat';
 
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
             <>
               <SplashScreen />
               <Home />
+              <ArtChat />
             </>
           }
         />
@@ -37,5 +39,6 @@ export default function App() {
         
       </Routes>
     </Router>
+    
   );
 }

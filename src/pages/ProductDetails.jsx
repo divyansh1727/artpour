@@ -3,6 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import { getProductById } from "../api/products";
 import { productMedia } from "../data/productMedia";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import LoginModal from "../components/LoginModal";
 
 // Normalize product name
 const normalizeName = (name) => name?.trim().toLowerCase();
@@ -29,6 +31,8 @@ export const mergeMedia = (p) => {
 export default function ProductDetails() {
   const { id } = useParams();
   const { addToCart, cart } = useCart();
+  const { user } = useAuth();
+const [showLogin, setShowLogin] = useState(false);
 
   const [product, setProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -139,17 +143,30 @@ const handleAddToCart = () => {
 
           <div className="flex gap-3 flex-wrap">
             <button
-              onClick={() => setShowModal(true)}
-              className="flex-1 bg-pink-600 text-white px-6 py-3 rounded-lg hover:bg-pink-700 transition"
-            >
-              Add to Cart
-            </button>
-            <button
-              onClick={() => setShowModal(true)}
-              className="flex-1 bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition"
-            >
-              Buy Now
-            </button>
+  onClick={() => {
+    if (!user) {
+      setShowLogin(true);
+      return;
+    }
+    setShowModal(true);
+  }}
+  className="flex-1 bg-pink-600 text-white px-6 py-3 rounded-lg"
+>
+  Add to Cart
+</button>
+
+<button
+  onClick={() => {
+    if (!user) {
+      setShowLogin(true);
+      return;
+    }
+    setShowModal(true);
+  }}
+  className="flex-1 bg-green-500 text-white px-6 py-3 rounded-lg"
+>
+  Buy Now
+</button>
           </div>
 
           <button
@@ -265,6 +282,7 @@ const handleAddToCart = () => {
           </Link>
         </div>
       )}
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
     </div>
   );
 }
